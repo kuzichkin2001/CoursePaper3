@@ -15,7 +15,7 @@ services:
     image: hopper-back-end
     container_name: hopper-backend
     build:
-      context: ./hopper
+      context: ./back-end
     restart: always
     tty: true
     depends_on:
