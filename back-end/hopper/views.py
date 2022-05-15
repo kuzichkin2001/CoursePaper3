@@ -1,8 +1,9 @@
+import base64
 import json
 from datetime import date as dt
 from django.shortcuts import render
 from hopper.forms import CodeForm
-from hopper.models import Session
+from hopper.models import Session, User
 from django.http import JsonResponse
 
 
@@ -46,9 +47,42 @@ def new_session(request):
 		name=req["name"],
 		kuz_place=req["kuz_place"],
 		code=req["code"],
-		creation_date=dt.fromtimestamp(req["creation_date"] / 1000)
+		creation_date=dt.fromtimestamp(req["creation_date"] / 1000),
+		user_id=req["user_id"]
 	)
 	return JsonResponse({"status": 200})
+
+
+def register(request):
+	req = json.loads(request.body.decode())
+	print(f'request: {req}')
+
+	password = req['password']
+	confirm_password = req['confirm_password']
+
+	if password == confirm_password:
+		user = User.objects.create(
+			username=req['user_name'],
+			password=password,
+			role='user'
+		)
+
+		return JsonResponse({
+			"data": {
+				"id": user["user_id"],
+				"access_token": base64.b64encode(user["username"] + user["password"])
+			},
+			"status": 200
+		})
+	else:
+		return JsonResponse({
+			"status": 400,
+			"data": {
+				"error": "Пароли не совпадают"
+			}
+		})
+
+
 
 
 def rules(request):

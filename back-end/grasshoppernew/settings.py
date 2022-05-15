@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': 'hopper-executor',
         'USER': 'postgres',
         'PASSWORD': 'igumug16',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': 5432
     }
 }
